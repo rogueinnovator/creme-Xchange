@@ -1,0 +1,281 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Wholesaler API",
+    "version": "1.0.0",
+    "description": "API for managing wholesaler sales data"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/dashboard/wholesaler": {
+      "get": {
+        "tags": ["Wholesalers"],
+        "summary": "Get wholesaler sales data",
+        "description": "Retrieves wholesaler sales data, optionally filtered by batch ID",
+        "parameters": [
+          {
+            "name": "batchId",
+            "in": "query",
+            "description": "Filter by batch ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wholesaler data fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Wholesaler data fetched successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Wholesaler"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Wholesalers"],
+        "summary": "Create wholesaler sales entry",
+        "description": "Creates a new wholesaler sales entry (Wholesaler or Admin only)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WholesalerPayload"
+              },
+              "example": {
+                "batchId": "64c9a4b7c9a4b7c9a4b7c9a4",
+                "retailerName": "ABC Retail",
+                "numberOfBags": 100,
+                "totalWeightSold": 5000
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Wholesaler sales entry created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Wholesaler selling entry created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Wholesaler"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Batch not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Wholesaler": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "batchId": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "retailerName": {
+            "type": "string",
+            "example": "ABC Retail",
+            "description": "Name of the retailer"
+          },
+          "numberOfBags": {
+            "type": "number",
+            "example": 100,
+            "description": "Number of bags sold"
+          },
+          "totalWeightSold": {
+            "type": "number",
+            "example": 5000,
+            "description": "Total weight sold (in kg)"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T12:00:00Z"
+          },
+          "batch": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "shipmentId": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "WholesalerPayload": {
+        "type": "object",
+        "required": [
+          "batchId",
+          "retailerName",
+          "numberOfBags",
+          "totalWeightSold"
+        ],
+        "properties": {
+          "batchId": {
+            "type": "string",
+            "description": "ID of the batch being sold",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "retailerName": {
+            "type": "string",
+            "description": "Name of the retailer",
+            "example": "ABC Retail"
+          },
+          "numberOfBags": {
+            "type": "number",
+            "description": "Number of bags sold",
+            "example": 100
+          },
+          "totalWeightSold": {
+            "type": "number",
+            "description": "Total weight sold (in kg)",
+            "example": 5000
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Error message"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+    "paths": {
+      "/api/customer-support": {
+        "get": {
+          "tags": ["Customer Support"],
+          "summary": "Fetch support requests",
+          "description": "Fetches all support requests. Admins get all, regular users get their own.",
+          "responses": {
+            "200": {
+              "description": "Support requests fetched successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": { "type": "boolean" },
+                      "message": { "type": "string" },
+                      "supportRequests": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/SupportRequest"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Customer Support"],
+          "summary": "Create a new support request",
+          "description": "Creates a support request for the authenticated user.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["category", "description"],
+                  "properties": {
+                    "category": { "type": "string" },
+                    "description": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Support request created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": { "type": "boolean" },
+                      "message": { "type": "string" },
+                      "supportRequest": {
+                        "$ref": "#/components/schemas/SupportRequest"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing required fields",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "SupportRequest": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "category": { "type": "string" },
+            "description": { "type": "string" },
+            "userId": {
+              "type": "object",
+              "properties": {
+                "_id": { "type": "string" },
+                "username": { "type": "string" },
+                "email": { "type": "string" }
+              }
+            },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "updatedAt": { "type": "string", "format": "date-time" }
+          }
+        },
+        "ErrorResponse": {
+          "type": "object",
+          "properties": {
+            "success": { "type": "boolean" },
+            "message": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+  

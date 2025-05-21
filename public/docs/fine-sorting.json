@@ -1,0 +1,288 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fine Sorting API",
+    "version": "1.0.0",
+    "description": "API for managing fine sorting operations"
+  },
+  "paths": {
+    "/api/dashboard/upstream/fine-sorting": {
+      "get": {
+        "tags": ["Fine Sorting"],
+        "summary": "Get fine sorting data",
+        "description": "Retrieves fine sorting data, optionally filtered by shipment ID",
+        "parameters": [
+          {
+            "name": "shipmentId",
+            "in": "query",
+            "description": "Filter by shipment ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fine sorting data fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Fine Sorting fetched successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/FineSorting"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Fine Sorting"],
+        "summary": "Create fine sorting record",
+        "description": "Creates a new fine sorting record (Downstream or Admin only)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FineSortingPayload"
+              },
+              "example": {
+                "batchId": "BATCH123",
+                "shipmentId": "SHIP456",
+                "numberOfBags": 50,
+                "itemTypes": ["Electronics", "Plastics"],
+                "locationOfShop": "Warehouse A",
+                "grade": "A"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Fine sorting created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Fine sorting created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/FineSorting"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Batch not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FineSorting": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "batchId": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "shipmentId": {
+            "type": "string",
+            "example": "SHIP456"
+          },
+          "numberOfBags": {
+            "type": "number",
+            "example": 50
+          },
+          "itemTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["Electronics", "Plastics"]
+          },
+          "locationOfShop": {
+            "type": "string",
+            "example": "Warehouse A"
+          },
+          "grade": {
+            "type": "string",
+            "example": "A"
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FineSortingPayload": {
+        "type": "object",
+        "required": [
+          "batchId",
+          "shipmentId",
+          "numberOfBags",
+          "itemTypes",
+          "locationOfShop",
+          "grade"
+        ],
+        "properties": {
+          "batchId": {
+            "type": "string",
+            "description": "Batch identifier",
+            "example": "BATCH123"
+          },
+          "shipmentId": {
+            "type": "string",
+            "description": "Shipment identifier",
+            "example": "SHIP456"
+          },
+          "numberOfBags": {
+            "type": "number",
+            "description": "Number of bags processed",
+            "example": 50
+          },
+          "itemTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Types of items sorted",
+            "example": ["Electronics", "Plastics"]
+          },
+          "locationOfShop": {
+            "type": "string",
+            "description": "Location where sorting occurred",
+            "example": "Warehouse A"
+          },
+          "grade": {
+            "type": "string",
+            "description": "Quality grade of sorted items",
+            "example": "A"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Error message"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

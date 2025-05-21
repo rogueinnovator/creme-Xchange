@@ -1,0 +1,191 @@
+{
+  "paths": {
+    "/api/signup": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register a new user",
+        "description": "Creates a new user after checking for duplicate email and hashing the password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpRequest"
+              },
+              "example": {
+                "firstName": "Huzaifa",
+                "lastName": "Ali",
+                "email": "huzaifa@example.com",
+                "password": "mysecurepassword",
+                "userProfile": "retailer",
+                "country": "Pakistan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User with this email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "User with this email already exists"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "An error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SignUpRequest": {
+        "type": "object",
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "password",
+          "userProfile"
+        ],
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "example": "Huzaifa"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Ali"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "huzaifa@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "mysecurepassword"
+          },
+          "userProfile": {
+            "type": "string",
+            "enum": [
+              "upstream",
+              "downstream",
+              "wholesaler",
+              "retailer",
+              "admin"
+            ],
+            "example": "retailer"
+          },
+          "country": {
+            "type": "string",
+            "example": "Pakistan"
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "User created successfully"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "6634f6c59a554616ef2f32b3"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "Huzaifa"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Ali"
+          },
+          "email": {
+            "type": "string",
+            "example": "huzaifa@example.com"
+          },
+          "country": {
+            "type": "string",
+            "example": "Pakistan"
+          },
+          "userProfile": {
+            "type": "string",
+            "example": "retailer"
+          },
+          "approved": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-05-20T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-05-20T10:30:00.000Z"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "User with this email already exists"
+          }
+        }
+      }
+    }
+  }
+}
+

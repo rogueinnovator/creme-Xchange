@@ -1,0 +1,171 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Batch API",
+      "version": "1.0.0",
+      "description": "API for retrieving batch information"
+    },
+    "paths": {
+      "/api/dashboard/upstream/batches-information": {
+        "get": {
+          "tags": ["Batches"],
+          "summary": "Get all batches",
+          "description": "Retrieves a list of all batches with selected fields (Admin only)",
+          "responses": {
+            "200": {
+              "description": "Batches fetched successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Batches fetched successfully"
+                      },
+                      "batches": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Batch"
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "success": true,
+                    "message": "Batches fetched successfully",
+                    "batches": [
+                      {
+                        "_id": "64c9a4b7c9a4b7c9a4b7c9a4",
+                        "shipmentId": "SHIP12345",
+                        "shipmentDate": "2023-06-15T00:00:00Z",
+                        "arrivalDate": "2023-06-20T00:00:00Z",
+                        "category": "Electronics",
+                        "origin": "China",
+                        "destination": "USA",
+                        "weight": 1500
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "success": false,
+                    "message": "Unauthorized"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "success": false,
+                    "message": "Error Getting Batches"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Batch": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+            },
+            "shipmentId": {
+              "type": "string",
+              "example": "SHIP12345",
+              "description": "Unique identifier for the shipment"
+            },
+            "shipmentDate": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-06-15T00:00:00Z",
+              "description": "Date when the shipment was sent"
+            },
+            "arrivalDate": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-06-20T00:00:00Z",
+              "description": "Expected arrival date"
+            },
+            "category": {
+              "type": "string",
+              "example": "Electronics",
+              "description": "Category of goods in the shipment"
+            },
+            "origin": {
+              "type": "string",
+              "example": "China",
+              "description": "Origin country/location"
+            },
+            "destination": {
+              "type": "string",
+              "example": "USA",
+              "description": "Destination country/location"
+            },
+            "weight": {
+              "type": "number",
+              "example": 1500,
+              "description": "Total weight in kilograms"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-06-15T12:00:00Z",
+              "description": "When the batch record was created"
+            }
+          }
+        },
+        "ErrorResponse": {
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "example": false
+            },
+            "message": {
+              "type": "string",
+              "example": "Error message"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT",
+          "description": "JWT token for authentication"
+        }
+      }
+    }
+  }

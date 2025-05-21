@@ -1,0 +1,226 @@
+{
+  "paths": {
+    "/esg/insights": {
+      "get": {
+        "summary": "Get ESG insights and metrics",
+        "description": "Retrieves comprehensive ESG metrics including carbon footprint, recycling rates, and operational trends",
+        "tags": ["ESG"],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ESGInsightsResponse"
+                },
+                "example": {
+                  "summary": {
+                    "totalBatches": 150,
+                    "completedBatches": 120,
+                    "completionRate": 80.0,
+                    "recyclingRate": 75.5
+                  },
+                  "carbonFootprint": {
+                    "totalDistance": 75000,
+                    "totalWeight": 150000,
+                    "totalCarbonEmissions": 1125.0,
+                    "carbonPerTon": 7.5
+                  },
+                  "recycling": {
+                    "totalSaleableItems": 9000,
+                    "totalUnsaleableItems": 2000,
+                    "totalReturnItems": 500
+                  },
+                  "monthlyTrends": [
+                    {
+                      "period": "2023-01",
+                      "batchCount": 25,
+                      "totalWeight": 25000
+                    },
+                    {
+                      "period": "2023-02",
+                      "batchCount": 30,
+                      "totalWeight": 30000
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Failed to fetch ESG insights"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ESGInsightsResponse": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/ESGSummary"
+          },
+          "carbonFootprint": {
+            "$ref": "#/components/schemas/CarbonFootprint"
+          },
+          "recycling": {
+            "$ref": "#/components/schemas/RecyclingMetrics"
+          },
+          "monthlyTrends": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MonthlyTrend"
+            }
+          }
+        }
+      },
+      "ESGSummary": {
+        "type": "object",
+        "properties": {
+          "totalBatches": {
+            "type": "integer",
+            "description": "Total number of batches processed",
+            "example": 150
+          },
+          "completedBatches": {
+            "type": "integer",
+            "description": "Number of batches completed (status: final_use)",
+            "example": 120
+          },
+          "completionRate": {
+            "type": "number",
+            "format": "float",
+            "description": "Percentage of batches completed",
+            "example": 80.0
+          },
+          "recyclingRate": {
+            "type": "number",
+            "format": "float",
+            "description": "Percentage of items that were successfully recycled",
+            "example": 75.5
+          }
+        }
+      },
+      "CarbonFootprint": {
+        "type": "object",
+        "properties": {
+          "totalDistance": {
+            "type": "integer",
+            "description": "Total distance traveled by all batches (in km)",
+            "example": 75000
+          },
+          "totalWeight": {
+            "type": "integer",
+            "description": "Total weight of all batches (in kg)",
+            "example": 150000
+          },
+          "totalCarbonEmissions": {
+            "type": "number",
+            "format": "float",
+            "description": "Total carbon emissions (in kg CO2)",
+            "example": 1125.0
+          },
+          "carbonPerTon": {
+            "type": "number",
+            "format": "float",
+            "description": "Carbon emissions per metric ton (kg CO2/ton)",
+            "example": 7.5
+          }
+        }
+      },
+      "RecyclingMetrics": {
+        "type": "object",
+        "properties": {
+          "totalSaleableItems": {
+            "type": "integer",
+            "description": "Total number of items that could be sold/recycled",
+            "example": 9000
+          },
+          "totalUnsaleableItems": {
+            "type": "integer",
+            "description": "Total number of items that could not be recycled",
+            "example": 2000
+          },
+          "totalReturnItems": {
+            "type": "integer",
+            "description": "Total number of items that were returned",
+            "example": 500
+          }
+        }
+      },
+      "MonthlyTrend": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "description": "Year and month in YYYY-MM format",
+            "example": "2023-01"
+          },
+          "batchCount": {
+            "type": "integer",
+            "description": "Number of batches processed in this period",
+            "example": 25
+          },
+          "totalWeight": {
+            "type": "integer",
+            "description": "Total weight processed in this period (kg)",
+            "example": 25000
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Error message describing what went wrong"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token for authentication"
+      }
+    }
+  }
+}

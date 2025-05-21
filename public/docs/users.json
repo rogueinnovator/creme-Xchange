@@ -1,0 +1,179 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "User Management API",
+      "version": "1.0.0",
+      "description": "API for retrieving user information"
+    },
+    "paths": {
+      "/api/dashboard/users": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get all users",
+          "description": "Retrieves a list of all users with selected fields (Admin only)",
+          "responses": {
+            "200": {
+              "description": "Users fetched successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Users Fetched successfully"
+                      },
+                      "users": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "success": true,
+                    "message": "Users Fetched successfully",
+                    "users": [
+                      {
+                        "_id": "64c9a4b7c9a4b7c9a4b7c9a4",
+                        "name": "Admin User",
+                        "email": "admin@example.com",
+                        "country": "USA",
+                        "userProfile": "admin"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "success": false,
+                    "message": "Unauthorized"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "success": false,
+                    "message": "Error Getting Users"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": ["Users"],
+          "summary": "Create new user (Not implemented)",
+          "description": "This endpoint is not currently implemented",
+          "responses": {
+            "501": {
+              "description": "Not Implemented",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "success": false,
+                    "message": "This endpoint is not implemented yet"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+            },
+            "name": {
+              "type": "string",
+              "example": "Admin User",
+              "description": "Full name of the user"
+            },
+            "email": {
+              "type": "string",
+              "example": "admin@example.com",
+              "description": "Email address of the user"
+            },
+            "country": {
+              "type": "string",
+              "example": "USA",
+              "description": "Country of residence"
+            },
+            "userProfile": {
+              "type": "string",
+              "enum": ["admin", "upstream", "downstream", "retailer"],
+              "example": "admin",
+              "description": "Role/Profile of the user"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-06-15T12:00:00Z",
+              "description": "When the user account was created"
+            }
+          }
+        },
+        "ErrorResponse": {
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "example": false
+            },
+            "message": {
+              "type": "string",
+              "example": "Error message"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT",
+          "description": "JWT token for authentication"
+        }
+      }
+    }
+  }
+  

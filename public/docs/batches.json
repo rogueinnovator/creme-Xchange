@@ -1,0 +1,384 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Batch API",
+    "version": "1.0.0",
+    "description": "API for managing batches"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/batches/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Batch ID"
+        }
+      ],
+      "get": {
+        "tags": ["Batch"],
+        "summary": "Get batch by ID",
+        "description": "Retrieves a single batch by its ID",
+        "responses": {
+          "200": {
+            "description": "Batch retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "batch retrieved successfully"
+                    },
+                    "batch": {
+                      "$ref": "#/components/schemas/Batch"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Batch not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Batch"],
+        "summary": "Update batch",
+        "description": "Updates an existing batch. Requires 'upstream' or 'admin' role.",
+        "requestBody": {
+          "description": "Batch update data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Batch updated successfully"
+                    },
+                    "batch": {
+                      "$ref": "#/components/schemas/Batch"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Batch not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Batch"],
+        "summary": "Delete batch",
+        "description": "Deletes an existing batch. Requires 'upstream' or 'admin' role.",
+        "responses": {
+          "200": {
+            "description": "Batch deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Batch deleted successfully"
+                    },
+                    "batch": {
+                      "$ref": "#/components/schemas/Batch"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Batch not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Batch": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "649cf20d-6ee7-48d7-a18d-1e35cf55ed02"
+              },
+              "name": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "email": {
+                "type": "string",
+                "example": "john@example.com"
+              },
+              "userProfile": {
+                "type": "string",
+                "enum": ["admin", "upstream", "downstream"],
+                "example": "admin"
+              }
+            }
+          },
+          "shipmentId": {
+            "type": "string",
+            "example": "SHIP12345"
+          },
+          "shipmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T00:00:00Z"
+          },
+          "arrivalDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-20T00:00:00Z"
+          },
+          "category": {
+            "type": "string",
+            "example": "Electronics"
+          },
+          "origin": {
+            "type": "string",
+            "example": "China"
+          },
+          "destination": {
+            "type": "string",
+            "example": "USA"
+          },
+          "weight": {
+            "type": "number",
+            "example": 1500
+          },
+          "status": {
+            "type": "string",
+            "example": "pending"
+          },
+          "timeline": {
+            "type": "object",
+            "properties": {
+              "collection": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-06-15T12:00:00Z"
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T12:00:00Z"
+          }
+        }
+      },
+      "BatchUpdate": {
+        "type": "object",
+        "properties": {
+          "shipmentId": {
+            "type": "string",
+            "example": "SHIP12345"
+          },
+          "shipmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T00:00:00Z"
+          },
+          "arrivalDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-20T00:00:00Z"
+          },
+          "category": {
+            "type": "string",
+            "example": "Electronics"
+          },
+          "origin": {
+            "type": "string",
+            "example": "China"
+          },
+          "destination": {
+            "type": "string",
+            "example": "USA"
+          },
+          "weight": {
+            "type": "number",
+            "example": 1500
+          },
+          "status": {
+            "type": "string",
+            "example": "in-transit"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Error message"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token for authentication"
+      }
+    }
+  }
+}

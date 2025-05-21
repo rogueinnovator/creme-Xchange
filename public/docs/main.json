@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "version": "1.0.0",
+    "description": "API DOCUMENTATION FOR CREME EXCHANGE"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    },
+    {
+      "url": "https://creme-xchange.vercel.app",
+      "description": "Live server"
+    }
+  ],
+  "paths": {
+    "/api/login": {
+      "$ref": "./auth.json#/paths/~1api~1login"
+    },
+    "/api/signup": {
+      "$ref": "./signup.json#/paths/~1api~1signup"
+    },
+    "/api/forgot-password": {
+      "$ref": "./forgot-password.json#/paths/~1api~1forgot-password"
+    },
+    "/api/profile": {
+      "$ref": "./profile.json#/paths/~1api~1profile"
+    },
+    "/api/batches": {
+      "$ref": "./createBatch.json#/paths/~1api~1batches"
+    },
+    "/api/batches/{id}": {
+      "$ref": "./batches.json#/paths/~1api~1batches~1{id}"
+    },
+    "/api/track-batch/{id}": {
+      "$ref": "./track-batch.json#/paths/~1api~1track-batch~1{id}"
+    },
+
+    "/api/customer-support": {
+      "$ref": "./customerSupport.json#/paths/~1api~1customer-support"
+    },
+    "/api/dashboard/downstream": {
+      "$ref": "./downStream.json#/paths/~1api~1dashboard~1downstream"
+    },
+    "/api/dashboard/retailer": {
+      "$ref": "./retailer.json#/paths/~1api~1dashboard~1retailer"
+    },
+    "/api/dashboard/role-management": {
+      "$ref": "./role-management.json#/paths/~1api~1dashboard~1role-management"
+    },
+    "/api/dashboard/upstream/batches-information": {
+      "$ref": "./batches-information.json#/paths/~1api~1dashboard~1upstream~1batches-information"
+    },
+    "/api/dashboard/upstream/fine-sorting": {
+      "$ref": "./fine-sorting.json#/paths/~1api~1dashboard~1upstream~1fine-sorting"
+    },
+    "/api/dashboard/users": {
+      "$ref": "./users.json#/paths/~1api~1dashboard~1users"
+    },
+    "/api/dashboard/wholesaler": {
+      "$ref": "./wholesaler.json#/paths/~1api~1dashboard~1wholesaler"
+    }
+  }
+}

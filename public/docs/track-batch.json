@@ -1,0 +1,137 @@
+{
+  "paths": {
+    "/api/track-batch/{id}": {
+      "get": {
+        "summary": "Get batch details and timeline by ID or shipmentId",
+        "tags": ["Batches"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Batch ID or shipment ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch details fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "batch": { "$ref": "#/components/schemas/Batch" },
+                    "timeline": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "stage": { "type": "string" },
+                          "completed": { "type": "boolean" },
+                          "date": { "type": ["string", "null"], "format": "date-time" }
+                        }
+                      }
+                    },
+                    "metrics": {
+                      "type": "object",
+                      "properties": {
+                        "currentStage": { "type": "string" },
+                        "daysInTransit": { "type": "integer" }
+                      }
+                    },
+                    "details": {
+                      "type": "object",
+                      "properties": {
+                        "fineSorting": { "type": ["object", "null"] },
+                        "downstreamSorting": { "type": ["object", "null"] },
+                        "wholesalerSelling": { "type": ["object", "null"] },
+                        "retailSelling": { "type": ["object", "null"] }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Batch not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Batch": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "shipmentId": { "type": "string" },
+          "status": { "type": "string" },
+          "timeline": {
+            "type": "object",
+            "properties": {
+              "collection": { "type": ["string", "null"], "format": "date-time" },
+              "sorting": { "type": ["string", "null"], "format": "date-time" },
+              "shipping": { "type": ["string", "null"], "format": "date-time" },
+              "arrival": { "type": ["string", "null"], "format": "date-time" },
+              "final_use": { "type": ["string", "null"], "format": "date-time" }
+            }
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "_id": { "type": "string" },
+              "name": { "type": "string" }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+

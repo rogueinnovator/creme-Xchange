@@ -1,0 +1,263 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Retailer API",
+    "version": "1.0.0",
+    "description": "API for managing retailer sales data"
+  },
+  "paths": {
+    "/api/dashboard/retailer": {
+      "get": {
+        "tags": ["Retailers"],
+        "summary": "Get retailer sales data",
+        "description": "Retrieves retailer sales data, optionally filtered by batch ID",
+        "parameters": [
+          {
+            "name": "batchId",
+            "in": "query",
+            "description": "Filter by batch ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retailer data fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Retailer data fetched successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Retailer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Retailers"],
+        "summary": "Create retailer sales entry",
+        "description": "Creates a new retailer sales entry (Retailer or Admin only)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetailerPayload"
+              },
+              "example": {
+                "batchId": "64c9a4b7c9a4b7c9a4b7c9a4",
+                "totalSoldInBales": 50,
+                "totalReturnedItemsInBales": 5
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Retail sales entry created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Retail selling entry created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Retailer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Batch not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Retailer": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "batchId": {
+            "type": "string",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "batch": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "shipmentId": {
+                "type": "string"
+              }
+            }
+          },
+          "totalSoldInBales": {
+            "type": "number",
+            "example": 50,
+            "description": "Total number of bales sold"
+          },
+          "totalReturnedItemsInBales": {
+            "type": "number",
+            "example": 5,
+            "description": "Total number of bales returned"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-15T12:00:00Z"
+          }
+        }
+      },
+      "RetailerPayload": {
+        "type": "object",
+        "required": [
+          "batchId",
+          "totalSoldInBales",
+          "totalReturnedItemsInBales"
+        ],
+        "properties": {
+          "batchId": {
+            "type": "string",
+            "description": "ID of the batch being sold/returned",
+            "example": "64c9a4b7c9a4b7c9a4b7c9a4"
+          },
+          "totalSoldInBales": {
+            "type": "number",
+            "description": "Total number of bales sold",
+            "example": 50
+          },
+          "totalReturnedItemsInBales": {
+            "type": "number",
+            "description": "Total number of bales returned",
+            "example": 5
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Error message"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
