@@ -122,7 +122,10 @@ const DownStream = () => {
         }
 
         const response = await fetch(
-          `/api/dashboard/downstream?${params.toString()}`
+          `/api/dashboard/downstream?${params.toString()}`,
+          {
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {

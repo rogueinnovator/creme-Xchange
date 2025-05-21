@@ -118,7 +118,10 @@ const RoleManagement = () => {
         }
 
         const response = await fetch(
-          `/api/dashboard/role-management?${params.toString()}`
+          `/api/dashboard/role-management?${params.toString()}`,
+          {
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {
@@ -129,7 +132,7 @@ const RoleManagement = () => {
           success: boolean;
           message?: string;
           users: UserRole[];
-          pagination?: { totalPages: number; };
+          pagination?: { totalPages: number };
         };
 
         const result: ApiResponse = await response.json();

@@ -109,7 +109,10 @@ const Wholesaler = () => {
         //   : "/api/dashboard/wholesaler";
 
         const response = await fetch(
-          `/api/dashboard/wholesaler?${params.toString()}`
+          `/api/dashboard/wholesaler?${params.toString()}`,
+          {
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {

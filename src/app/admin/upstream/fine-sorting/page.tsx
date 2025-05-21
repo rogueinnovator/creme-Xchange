@@ -129,7 +129,10 @@ const FineSorting = () => {
         }
 
         const response = await fetch(
-          `/api/dashboard/upstream/fine-sorting?${params.toString()}`
+          `/api/dashboard/upstream/fine-sorting?${params.toString()}`,
+          {
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {

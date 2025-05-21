@@ -102,7 +102,10 @@ const BranchesInformation = () => {
         }
 
         const response = await fetch(
-          `/api/dashboard/upstream/batches-information?${params.toString()}`
+          `/api/dashboard/upstream/batches-information?${params.toString()}`,
+          {
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {

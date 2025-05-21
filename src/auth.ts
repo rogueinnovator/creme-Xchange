@@ -9,6 +9,7 @@ import UserModel from "./models/user.model";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.NEXTAUTH_SECRET || "Secret",
   session: { strategy: "jwt" },
+
   trustHost: true,
   callbacks: {
     jwt({ token, user }: any) {

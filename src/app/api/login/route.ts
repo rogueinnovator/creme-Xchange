@@ -20,10 +20,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await signIn("credentials", {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result: any = await signIn("credentials", {
       redirect: false,
+
       email,
       password,
+
+      // redirectTo: "/admin/dashboard",
     });
 
     console.log("Login Result : ", result);

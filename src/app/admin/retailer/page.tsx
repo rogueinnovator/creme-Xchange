@@ -107,7 +107,10 @@ const Retailer = () => {
         // Use search endpoint if there's a search term, otherwise use regular endpoint
 
         const response = await fetch(
-          `/api/dashboard/retailer?${params.toString()}`
+          `/api/dashboard/retailer?${params.toString()}`,
+          {
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {

@@ -8,7 +8,7 @@ import type {
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import { Check,  X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type User = {
@@ -148,7 +148,10 @@ const Dashboard = () => {
         console.log("Current sorting:", sorting);
 
         const response = await fetch(
-          `/api/dashboard/users?${params.toString()}`
+          `/api/dashboard/users?${params.toString()}`,
+          {
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {
